@@ -33,7 +33,12 @@ namespace FabricioEx
                 for(int j = 1; j <= colCount; j++)
                 {
                     string name = xlRange.Cells[1, j].Value2.ToString();
-                    string v = xlRange.Cells[i, j].Value2.ToString();
+                    Excel.Range vCell = xlRange.Cells[i, j];
+                    if (vCell.Value2==null)
+                    {
+                        continue;
+                    }
+                    string v = vCell.Value2.ToString();
                     if (name.StartsWith("!"))
                     {
                         continue;
@@ -41,19 +46,19 @@ namespace FabricioEx
                     else if (name.Contains("@#anchor"))
                     {
                         string join = xlWorksheet.Name.Replace(".json","/") + name.Replace("@#anchor", "@#join");
-                        for(int m = 2; m < sheets.Count; m++)
+                        for(int m = 2; m <= sheets.Count; m++)
                         {
                             Excel.Range range = sheets[m].UsedRange;
                             if (join.Equals(range.Cells[1, 1].Value2.ToString()))
                             {
                                 JArray array1 = new JArray();
-                                for(int n = 2; n < range.Rows.Count; n++)
+                                for(int n = 2; n <= range.Rows.Count; n++)
                                 {
-                                    if(v.Equals(range.Cells[n,1]))
+                                    if(v.Equals(range.Cells[n,1].Value2.ToString()))
                                     {
-                                        for(int o = 2; o < range.Columns.Count; o++)
+                                        for(int o = 2; o <= range.Columns.Count; o++)
                                         {
-                                            array1.Add(range.Cells[n, o]);
+                                            array1.Add(range.Cells[n, o].Value2.ToString());
                                         }
                                     }                               
                                 }

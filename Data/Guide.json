@@ -5,7 +5,18 @@
     "TriggerDelay": "100",
     "TriggerType": "None",
     "TriggerButton": [],
-    "Subs": []
+    "Options": [
+      "Equal",
+      "this.hero_id==10008"
+    ],
+    "Subs": [
+      "这是第二段，这个游戏超乎想象，划时代画面，次世代场景。"
+    ],
+    "Test": [
+      "1",
+      "2",
+      "3"
+    ]
   },
   {
     "ID": "2",
@@ -13,14 +24,24 @@
     "TriggerDelay": "100",
     "TriggerType": "Scene",
     "TriggerButton": [],
-    "Subs": []
+    "Options": [],
+    "Subs": [
+      "这是全新制作的卡牌，融合了竞技，策略，rpg，养成，收集，战斗为一体。"
+    ],
+    "Test": [
+      "a",
+      "b"
+    ]
   },
   {
     "ID": "3",
     "TriggerScene": "HomeScene",
     "TriggerDelay": "100",
     "TriggerType": "Mask",
-    "TriggerButton": [],
+    "TriggerButton": [
+      "normalGame_btn"
+    ],
+    "Options": [],
     "Subs": []
   },
   {
@@ -29,6 +50,10 @@
     "TriggerDelay": "100",
     "TriggerType": "None",
     "TriggerButton": [],
+    "Options": [
+      "Override_SceneName_FunctionName_Judge",
+      "SelectRoomScene,onRoomSelected,evt.room==10"
+    ],
     "Subs": []
   }
 ]
