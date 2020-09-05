@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace FabricioEx
 {
@@ -77,7 +78,7 @@ namespace FabricioEx
                 }
                 array.Add(jObject);
             }
-
+            File.WriteAllText(@"E:\exerciseExcelConsole\Data\" + xlWorksheet.Name, array.ToString());
             //cleanup
             GC.Collect();
             GC.WaitForPendingFinalizers();

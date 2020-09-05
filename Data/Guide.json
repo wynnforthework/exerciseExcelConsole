@@ -1,0 +1,34 @@
+[
+  {
+    "ID": "1",
+    "TriggerScene": "SelectHeroNewScene",
+    "TriggerDelay": "100",
+    "TriggerType": "None",
+    "TriggerButton": [],
+    "Subs": []
+  },
+  {
+    "ID": "2",
+    "TriggerScene": "LoginScene",
+    "TriggerDelay": "100",
+    "TriggerType": "Scene",
+    "TriggerButton": [],
+    "Subs": []
+  },
+  {
+    "ID": "3",
+    "TriggerScene": "HomeScene",
+    "TriggerDelay": "100",
+    "TriggerType": "Mask",
+    "TriggerButton": [],
+    "Subs": []
+  },
+  {
+    "ID": "4",
+    "TriggerScene": "SelectRoomScene",
+    "TriggerDelay": "100",
+    "TriggerType": "None",
+    "TriggerButton": [],
+    "Subs": []
+  }
+]
