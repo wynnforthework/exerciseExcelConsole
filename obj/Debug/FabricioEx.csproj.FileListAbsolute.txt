@@ -6,3 +6,11 @@ C:\Users\samue\source\repos\FabricioEx\obj\Debug\FabricioEx.csproj.ResolveComRef
 C:\Users\samue\source\repos\FabricioEx\obj\Debug\FabricioEx.csproj.CoreCompileInputs.cache
 C:\Users\samue\source\repos\FabricioEx\obj\Debug\FabricioEx.exe
 C:\Users\samue\source\repos\FabricioEx\obj\Debug\FabricioEx.pdb
+E:\exerciseExcelConsole\bin\Debug\FabricioEx.exe.config
+E:\exerciseExcelConsole\bin\Debug\FabricioEx.exe
+E:\exerciseExcelConsole\bin\Debug\FabricioEx.pdb
+E:\exerciseExcelConsole\obj\Debug\FabricioEx.csprojAssemblyReference.cache
+E:\exerciseExcelConsole\obj\Debug\FabricioEx.csproj.ResolveComReference.cache
+E:\exerciseExcelConsole\obj\Debug\FabricioEx.csproj.CoreCompileInputs.cache
+E:\exerciseExcelConsole\obj\Debug\FabricioEx.exe
+E:\exerciseExcelConsole\obj\Debug\FabricioEx.pdb
