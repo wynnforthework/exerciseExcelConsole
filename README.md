@@ -4,14 +4,14 @@ excel转换成json的工具，在原仓库的基础上扩展解析规则
 ### TODO List  
 - [x] 读取Excel表  
 - [x] 解析规则  
-- [ ] 控制台参数  
+- [x] 控制台参数  
 
 ### 使用方式
 将项目生成的_Console.exe复制到有excel文件的文件夹，会自动将文件夹内所有.xlsx文件转换为json文件并输出该目录下的"json"文件夹
 ```
 @echo off
 cd %~dp0
-_Console.exe -o json
+FabricioEx.exe -o json
 pause
 ```
 
