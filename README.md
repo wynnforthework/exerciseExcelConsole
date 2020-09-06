@@ -51,5 +51,5 @@ xlsx2json:.
 2. 增加json库  
 解决方案：右键项目，选择“管理NuGet程序包”，或按照[官网](https://www.nuget.org/packages/Newtonsoft.Json)指导安装
 
-3. 打包成独立的exe文件
+3. 打包成独立的exe文件  
 解决方案：默认生成的exe文件和dll文件是分开的，如果只复制exe文件到别的文件夹执行会提示找不到json库，需要通过NuGet库管理工具另外安装“Costura.Fody”库，安装完成之后，再生成exe文件就是包含dll的了，可以随意复制使用。
