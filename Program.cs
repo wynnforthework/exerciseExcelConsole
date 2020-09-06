@@ -25,13 +25,16 @@ namespace FabricioEx
             }
             root = @"E:\exerciseExcelConsole\Data";
             outPutPath = "json";
-            IEnumerable<string> files = Directory.GetFiles(root + @"\", "*.xls*").Where(s => !s.StartsWith(@"~$") &&(s.EndsWith("xlsx") || s.EndsWith("xls")));
+            IEnumerable<string> files = Directory.GetFiles(root + @"\", "*.xls*").Where(s => s.EndsWith("xlsx") || s.EndsWith("xls"));
             if (files.Count<string>() > 0)
             {
                 Excel.Application xlApp = new Excel.Application();
                 foreach (string file in files)
                 {
-                    Excel2json(file, xlApp,outPutPath,root);
+                    if ((new FileInfo(file).Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+                    {
+                        Excel2json(file, xlApp,outPutPath,root);
+                    }
                 }
                 //quit and release
                 xlApp.Quit();
