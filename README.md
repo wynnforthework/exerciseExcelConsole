@@ -15,8 +15,24 @@ FabricioEx.exe -o json
 pause
 ```
 
-### 表格规范（解析规则）
-TODO 
+### 表格规范（解析规则） 
+<table>
+<thead><tr><th>Excel</th><th>Json</th><th>用处</th></tr></thead><tbody>
+ <tr>
+ <td>ID</td>
+ <td rowspan="2">{"id": "0"}</td>
+ <td rowspan="2">number,string等基本类型的简单数据结构</td>
+ </tr>
+ <tr><td>1</td></tr>
+ <tr><td>Params@</td><td rowspan="2">{"Params": ["1","2","3"]}</td><td rowspan="2">集合数据</td></tr>
+ <tr><td>1,2,3</td></tr>
+ <tr><td>Options@#anchor</td><td rowspan="2">{"Options": [{"Override_SceneName_FunctionName_Judge":["SelectRoomScene","onSelect","evt.room==3"]},{"Equal":["this.hero_id==3"]}</td><td rowspan="2">集合对象</td></tr>
+ <tr><td>1</td></tr>
+ <tr><td>Labels#anchor</td><td rowspan="2">{"Labels": {"title":"势如破竹","content":"三级战斗房间，英雄技能伤害+1%"}}</td><td rowspan="2">单个对象</td></tr>
+ <tr><td>1</td></tr>
+ <tr><td>!Desc</td><td rowspan="2">该列会被忽略</td><td rowspan="2">注释</td></tr>
+ <tr><td>首页</td></tr>
+</tbody></table>
 
 ### 目录结构
 xlsx2json:.  
