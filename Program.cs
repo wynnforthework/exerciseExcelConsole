@@ -148,6 +148,9 @@ namespace FabricioEx
                                 {
                                     AnchorIterator(jO, anchorIndex, colName, sheetIndex);
                                 }
+
+                                Marshal.ReleaseComObject(range);
+                                Marshal.ReleaseComObject(xl);
                             }
                         };
                         AnchorIterator(jObject,1,name,1);
