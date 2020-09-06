@@ -28,3 +28,6 @@ xlsx2json:.
 1. 编译时软件报错：error CS0234: 命名空间“Microsoft”中不存在类型或命名空间名“  
 解决方案：点击项目->添加引用->程序集->扩展  
 选中软件提示缺少的组件，我选的是Microsoft.Office.Interop.Excel，点击确定  
+
+2. 增加json库  
+解决方案：右键项目，选择“管理NuGet程序包”，或按照[官网]（https://www.nuget.org/packages/Newtonsoft.Json）指导安装
