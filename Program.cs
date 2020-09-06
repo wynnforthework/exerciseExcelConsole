@@ -23,26 +23,36 @@ namespace FabricioEx
                     outPutPath = args[1];
                 }
             }
-            root = @"E:\exerciseExcelConsole\Data";
-            outPutPath = "json";
-            IEnumerable<string> files = Directory.GetFiles(root + @"\", "*.xls*").Where(s => s.EndsWith("xlsx") || s.EndsWith("xls"));
-            if (files.Count<string>() > 0)
+            //root = @"E:\exerciseExcelConsole\Data";
+            //outPutPath = "json";
+            IEnumerable<string> allFiles = Directory.GetFiles(root + @"\", "*.xls*").Where(s => s.EndsWith("xlsx") || s.EndsWith("xls"));
+            List<string> files = new List<string>();
+            if (allFiles.Count<string>() > 0)
             {
                 Excel.Application xlApp = new Excel.Application();
-                foreach (string file in files)
+                foreach (string file in allFiles)
                 {
                     if ((new FileInfo(file).Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
                     {
-                        Excel2json(file, xlApp,outPutPath,root);
+                        files.Add(file);
                     }
                 }
+                Console.WriteLine("Found " + files.Count + "xlsx or xls files.");
+                Console.WriteLine("convert succeed:");
+                int progress = 1;
+                foreach(string file in files)
+                {
+                    Excel2json(file, xlApp, outPutPath, root, progress + @"/" + files.Count+"\t");
+                    progress++;
+                }
+                Console.WriteLine("All the files have been converted.");
                 //quit and release
                 xlApp.Quit();
                 Marshal.ReleaseComObject(xlApp);
             }
         }
 
-        static void Excel2json(string filePath, Excel.Application xlApp,string outPutPath,string root)
+        static void Excel2json(string filePath, Excel.Application xlApp,string outPutPath,string root,string progress)
         {
             
             Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(filePath);
@@ -213,6 +223,7 @@ namespace FabricioEx
                 Directory.CreateDirectory(outputDir);
             }
             File.WriteAllText(outputDir + @"\" + xlWorksheet.Name, array.ToString());
+            Console.WriteLine(progress + filePath);
 
             //cleanup
             GC.Collect();
