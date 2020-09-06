@@ -15,6 +15,9 @@ FabricioEx.exe -o json
 pause
 ```
 
+### 表格规范（解析规则）
+TODO 
+
 ### 目录结构
 xlsx2json:.  
 │  Guide.xlsx  
