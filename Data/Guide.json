@@ -6,8 +6,7 @@
     "TriggerType": "None",
     "TriggerButton": [],
     "Options": [
-      "Equal",
-      "this.hero_id==10008"
+      "Equal"
     ],
     "Subs": [
       "这是第二段，这个游戏超乎想象，划时代画面，次世代场景。"
@@ -38,6 +37,10 @@
     "TriggerScene": "HomeScene",
     "TriggerDelay": "100",
     "TriggerType": "Mask",
+    "Notes": [
+      "标准房",
+      "高级房"
+    ],
     "TriggerButton": [
       "normalGame_btn"
     ],
@@ -51,8 +54,7 @@
     "TriggerType": "None",
     "TriggerButton": [],
     "Options": [
-      "Override_SceneName_FunctionName_Judge",
-      "SelectRoomScene,onRoomSelected,evt.room==10"
+      "Override_SceneName_FunctionName_Judge"
     ],
     "Subs": []
   }
