@@ -7,7 +7,7 @@ excel转换成json的工具，在原仓库的基础上扩展解析规则
 - [x] 控制台参数  
 
 ### 使用方式
-将项目生成的_Console.exe复制到有excel文件的文件夹，会自动将文件夹内所有.xlsx文件转换为json文件并输出该目录下的"json"文件夹
+创建.bat批处理文件，将以下代码复制到文件中保存到exe相同的目录中，将项目生成的FabricioEx.exe复制到有excel文件的文件夹，会自动将文件夹内所有.xlsx文件转换为json文件并输出该目录下的"json"文件夹
 ```
 @echo off
 cd %~dp0
@@ -49,4 +49,7 @@ xlsx2json:.
 选中软件提示缺少的组件，我选的是Microsoft.Office.Interop.Excel，点击确定  
 
 2. 增加json库  
-解决方案：右键项目，选择“管理NuGet程序包”，或按照[官网]（https://www.nuget.org/packages/Newtonsoft.Json）指导安装
+解决方案：右键项目，选择“管理NuGet程序包”，或按照[官网](https://www.nuget.org/packages/Newtonsoft.Json)指导安装
+
+3. 打包成独立的exe文件
+解决方案：默认生成的exe文件和dll文件是分开的，如果只复制exe文件到别的文件夹执行会提示找不到json库，需要通过NuGet库管理工具另外安装“Costura.Fody”库，安装完成之后，再生成exe文件就是包含dll的了，可以随意复制使用。
