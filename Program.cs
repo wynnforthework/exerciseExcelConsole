@@ -43,7 +43,7 @@ namespace FabricioEx
                     {
                         continue;
                     }
-                    else if (name.Contains("@#anchor"))
+                    else if (name.Contains("#anchor"))
                     {
                         Action<JObject,int,string,int> AnchorIterator = null;
                         AnchorIterator = (jO,anchorIndex,colName, sheetIndex) =>
@@ -51,7 +51,21 @@ namespace FabricioEx
                             if (sheetIndex < sheets.Count)
                             {
                                 Excel._Worksheet xl = sheets[anchorIndex];
-                                string join = xl.Name.Replace(".json", "")+ "/" + colName.Replace("@#anchor", "@#join");
+                                bool isAnchorObj = true;
+                                string type = "";
+                                string join = "";
+                                if (name.Contains("@#anchor"))
+                                {
+                                    type = "@#anchor";
+                                    isAnchorObj = false;
+                                    join = xl.Name.Replace(".json", "")+ "/" + colName.Replace(type, "@#join");
+                                }
+                                else
+                                {
+                                    type = "#anchor";
+                                    isAnchorObj = true;
+                                    join = xl.Name.Replace(".json", "")+ "/" + colName.Replace(type, "#join");
+                                }
                                 ++sheetIndex;
                                 int m = sheetIndex;
 
@@ -60,6 +74,7 @@ namespace FabricioEx
                                 if (join.Equals(firstCell))
                                 {
                                     JArray array1 = new JArray();
+                                    JObject jObject1 = new JObject();
                                     for (int n = 2; n <= range.Rows.Count; n++)
                                     {
                                         if (v.Equals(range.Cells[n, 1].Value2.ToString()))
@@ -71,11 +86,20 @@ namespace FabricioEx
                                                 {
                                                     continue;
                                                 }
-                                                else if (colName2.Contains("@#anchor"))
+                                                else if (colName2.Contains("#anchor"))
                                                 {
+
                                                     JObject jO2 = new JObject();
                                                     AnchorIterator(jO2, n, colName2, sheetIndex);
-                                                    string colName3 = colName2.Replace("@#anchor", "");
+                                                    string colName3 = "";
+                                                    if (name.Contains("@#anchor"))
+                                                    {
+                                                        colName3 = colName2.Replace("@#anchor", "");
+                                                    }
+                                                    else
+                                                    {
+                                                        colName3 = colName2.Replace("#anchor", "");
+                                                    }
                                                     jO.Add(colName3, jO2[colName3]);
                                                 }
                                                 else if (colName2.Contains("@"))
@@ -96,12 +120,34 @@ namespace FabricioEx
                                                 }
                                                 else
                                                 {
-                                                    array1.Add(range.Cells[n, o].Value2.ToString());
+                                                    if (isAnchorObj)
+                                                    {
+                                                        jObject1.Add(colName, range.Cells[n, o].Value2.ToString());
+                                                        break;
+                                                    }
+                                                    else
+                                                    {
+                                                        array1.Add(range.Cells[n, o].Value2.ToString());
+                                                    }
                                                 }
                                             }
                                         }
                                     }
-                                    jO.Add(colName.Replace("@#anchor", ""), array1);
+                                    if (isAnchorObj)
+                                    {
+                                        if (jObject1.Count == 0)
+                                        {
+                                            jO.Add(colName.Replace(type, ""), jObject1);
+                                        }
+                                        else
+                                        {
+                                            jO.Add(colName.Replace(type, ""), jObject1[colName]);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        jO.Add(colName.Replace(type, ""), array1);
+                                    }
                                 }
                                 else
                                 {

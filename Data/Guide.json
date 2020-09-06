@@ -15,7 +15,8 @@
       "1",
       "2",
       "3"
-    ]
+    ],
+    "Labels": {}
   },
   {
     "ID": "2",
@@ -30,7 +31,8 @@
     "Test": [
       "a",
       "b"
-    ]
+    ],
+    "Labels": "势如破竹"
   },
   {
     "ID": "3",
@@ -45,7 +47,8 @@
       "normalGame_btn"
     ],
     "Options": [],
-    "Subs": []
+    "Subs": [],
+    "Labels": {}
   },
   {
     "ID": "4",
@@ -56,6 +59,7 @@
     "Options": [
       "Override_SceneName_FunctionName_Judge"
     ],
-    "Subs": []
+    "Subs": [],
+    "Labels": {}
   }
 ]
