@@ -14,7 +14,7 @@ namespace FabricioEx
         {
 
 
-            string root = @System.Environment.CurrentDirectory;
+            string root = Environment.CurrentDirectory;
             string outPutPath = root;
             if (args.Length == 2)
             {
@@ -23,6 +23,8 @@ namespace FabricioEx
                     outPutPath = args[1];
                 }
             }
+            root = @"E:\exerciseExcelConsole\Data";
+            outPutPath = "json";
             IEnumerable<string> files = Directory.GetFiles(root + @"\", "*.xls*").Where(s => !s.StartsWith(@"~$") &&(s.EndsWith("xlsx") || s.EndsWith("xls")));
             if (files.Count<string>() > 0)
             {
@@ -102,6 +104,7 @@ namespace FabricioEx
                                     {
                                         if (v.Equals(range.Cells[n, 1].Value2.ToString()))
                                         {
+                                            JObject jObject2 = new JObject();
                                             for (int o = 2; o <= range.Columns.Count; o++)
                                             {
                                                 string colName2 = range.Cells[1, o].Value2.ToString();
@@ -127,7 +130,7 @@ namespace FabricioEx
                                                 }
                                                 else if (colName2.Contains("@"))
                                                 {
-                                                    Excel.Range vCell2 = range.Cells[i, j];
+                                                    Excel.Range vCell2 = range.Cells[n, o];
                                                     if (vCell2.Value2 == null)
                                                     {
                                                         continue;
@@ -139,7 +142,7 @@ namespace FabricioEx
                                                     {
                                                         array2.Add(items[k]);
                                                     }
-                                                    jO.Add(colName2.Replace("@", ""), array2);
+                                                    jObject2.Add(colName2.Replace("@", ""), array2);
                                                 }
                                                 else
                                                 {
@@ -150,10 +153,11 @@ namespace FabricioEx
                                                     }
                                                     else
                                                     {
-                                                        array1.Add(range.Cells[n, o].Value2.ToString());
+                                                        jObject2.Add(colName2, range.Cells[n, o].Value2.ToString());
                                                     }
                                                 }
                                             }
+                                            array1.Add(jObject2);
                                         }
                                     }
                                     if (isAnchorObj)

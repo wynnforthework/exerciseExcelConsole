@@ -6,10 +6,17 @@
     "TriggerType": "None",
     "TriggerButton": [],
     "Options": [
-      "Equal"
+      {
+        "Type": "Equal",
+        "Params": [
+          "this.hero_id==10008"
+        ]
+      }
     ],
     "Subs": [
-      "这是第二段，这个游戏超乎想象，划时代画面，次世代场景。"
+      {
+        "Subtitle": "这是第二段，这个游戏超乎想象，划时代画面，次世代场景。"
+      }
     ],
     "Test": [
       "1",
@@ -26,7 +33,9 @@
     "TriggerButton": [],
     "Options": [],
     "Subs": [
-      "这是全新制作的卡牌，融合了竞技，策略，rpg，养成，收集，战斗为一体。"
+      {
+        "Subtitle": "这是全新制作的卡牌，融合了竞技，策略，rpg，养成，收集，战斗为一体。"
+      }
     ],
     "Test": [
       "a",
@@ -40,11 +49,17 @@
     "TriggerDelay": "100",
     "TriggerType": "Mask",
     "Notes": [
-      "标准房",
-      "高级房"
+      {
+        "Note": "标准房"
+      },
+      {
+        "Note": "高级房"
+      }
     ],
     "TriggerButton": [
-      "normalGame_btn"
+      {
+        "btn": "normalGame_btn"
+      }
     ],
     "Options": [],
     "Subs": [],
@@ -57,7 +72,14 @@
     "TriggerType": "None",
     "TriggerButton": [],
     "Options": [
-      "Override_SceneName_FunctionName_Judge"
+      {
+        "Type": "Override_SceneName_FunctionName_Judge",
+        "Params": [
+          "SelectRoomScene",
+          "onRoomSelected",
+          "evt.room==10"
+        ]
+      }
     ],
     "Subs": [],
     "Labels": {}
