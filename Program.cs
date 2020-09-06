@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json.Linq;
 using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace FabricioEx
 {
@@ -10,9 +12,35 @@ namespace FabricioEx
     {
         static void Main(string[] args)
         {
-            Excel.Application xlApp = new Excel.Application();
-            //Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"C:\Users\samue\source\repos\FabricioEx\Data\arquivo.xlsx");
-            Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(@"E:\exerciseExcelConsole\Data\Guide.xlsx");
+
+
+            string root = @System.Environment.CurrentDirectory;
+            string outPutPath = root;
+            if (args.Length == 2)
+            {
+                if (args[0] == "-o")
+                {
+                    outPutPath = args[1];
+                }
+            }
+            IEnumerable<string> files = Directory.GetFiles(root + @"\", "*.xls*").Where(s => !s.StartsWith(@"~$") &&(s.EndsWith("xlsx") || s.EndsWith("xls")));
+            if (files.Count<string>() > 0)
+            {
+                Excel.Application xlApp = new Excel.Application();
+                foreach (string file in files)
+                {
+                    Excel2json(file, xlApp,outPutPath,root);
+                }
+                //quit and release
+                xlApp.Quit();
+                Marshal.ReleaseComObject(xlApp);
+            }
+        }
+
+        static void Excel2json(string filePath, Excel.Application xlApp,string outPutPath,string root)
+        {
+            
+            Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(filePath);
 
             Excel.Sheets sheets = xlWorkbook.Sheets;
             Excel._Worksheet xlWorksheet = sheets[1];
@@ -22,14 +50,14 @@ namespace FabricioEx
             int rowCount = xlRange.Rows.Count;
             int colCount = xlRange.Columns.Count;
 
-            for(int i = 2; i <= rowCount; i++)
+            for (int i = 2; i <= rowCount; i++)
             {
                 JObject jObject = new JObject();
-                for(int j = 1; j <= colCount; j++)
+                for (int j = 1; j <= colCount; j++)
                 {
                     string name = xlRange.Cells[1, j].Value2.ToString();
                     Excel.Range vCell = xlRange.Cells[i, j];
-                    if (vCell.Value2==null)
+                    if (vCell.Value2 == null)
                     {
                         continue;
                     }
@@ -40,8 +68,8 @@ namespace FabricioEx
                     }
                     else if (name.Contains("#anchor"))
                     {
-                        Action<JObject,int,string,int> AnchorIterator = null;
-                        AnchorIterator = (jO,anchorIndex,colName, sheetIndex) =>
+                        Action<JObject, int, string, int> AnchorIterator = null;
+                        AnchorIterator = (jO, anchorIndex, colName, sheetIndex) =>
                         {
                             if (sheetIndex < sheets.Count)
                             {
@@ -53,13 +81,13 @@ namespace FabricioEx
                                 {
                                     type = "@#anchor";
                                     isAnchorObj = false;
-                                    join = xl.Name.Replace(".json", "")+ "/" + colName.Replace(type, "@#join");
+                                    join = xl.Name.Replace(".json", "") + "/" + colName.Replace(type, "@#join");
                                 }
                                 else
                                 {
                                     type = "#anchor";
                                     isAnchorObj = true;
-                                    join = xl.Name.Replace(".json", "")+ "/" + colName.Replace(type, "#join");
+                                    join = xl.Name.Replace(".json", "") + "/" + colName.Replace(type, "#join");
                                 }
                                 ++sheetIndex;
                                 int m = sheetIndex;
@@ -76,7 +104,7 @@ namespace FabricioEx
                                         {
                                             for (int o = 2; o <= range.Columns.Count; o++)
                                             {
-                                                string colName2 = range.Cells[1,o].Value2.ToString();
+                                                string colName2 = range.Cells[1, o].Value2.ToString();
                                                 if (colName2.StartsWith("!"))
                                                 {
                                                     continue;
@@ -153,18 +181,18 @@ namespace FabricioEx
                                 Marshal.ReleaseComObject(xl);
                             }
                         };
-                        AnchorIterator(jObject,1,name,1);
+                        AnchorIterator(jObject, 1, name, 1);
                     }
                     else if (name.Contains("@"))
                     {
                         string[] items = v.Split(new char[] { ',' });
                         JArray array1 = new JArray();
-                        for(var k = 0; k < items.Length; k++)
+                        for (var k = 0; k < items.Length; k++)
                         {
                             array1.Add(items[k]);
                         }
                         jObject.Add(name.Replace("@", ""), array1);
-                    } 
+                    }
                     else
                     {
                         jObject.Add(name, v);
@@ -172,7 +200,13 @@ namespace FabricioEx
                 }
                 array.Add(jObject);
             }
-            File.WriteAllText(@"E:\exerciseExcelConsole\Data\" + xlWorksheet.Name, array.ToString());
+            string outputDir = root + @"\" + outPutPath;
+            if (!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
+            File.WriteAllText(outputDir + @"\" + xlWorksheet.Name, array.ToString());
+
             //cleanup
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -189,9 +223,6 @@ namespace FabricioEx
             xlWorkbook.Close();
             Marshal.ReleaseComObject(xlWorkbook);
 
-            //quit and release
-            xlApp.Quit();
-            Marshal.ReleaseComObject(xlApp);
         }
     }
 }

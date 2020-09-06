@@ -14,6 +14,6 @@ E:\exerciseExcelConsole\obj\Debug\FabricioEx.csproj.ResolveComReference.cache
 E:\exerciseExcelConsole\obj\Debug\FabricioEx.csproj.CoreCompileInputs.cache
 E:\exerciseExcelConsole\obj\Debug\FabricioEx.exe
 E:\exerciseExcelConsole\obj\Debug\FabricioEx.pdb
-E:\exerciseExcelConsole\bin\Debug\Newtonsoft.Json.dll
 E:\exerciseExcelConsole\bin\Debug\Newtonsoft.Json.xml
 E:\exerciseExcelConsole\obj\Debug\FabricioEx.csproj.CopyComplete
+E:\exerciseExcelConsole\obj\Debug\FabricioEx.csproj.Fody.CopyLocal.cache
