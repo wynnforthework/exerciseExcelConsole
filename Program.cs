@@ -37,7 +37,7 @@ namespace FabricioEx
                         files.Add(file);
                     }
                 }
-                Console.WriteLine("Found " + files.Count + "xlsx or xls files.");
+                Console.WriteLine("Found " + files.Count + " xlsx or xls files.");
                 Console.WriteLine("convert succeed:");
                 int progress = 1;
                 foreach(string file in files)
