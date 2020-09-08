@@ -96,21 +96,21 @@ namespace FabricioEx
             }
             else
             {
-                root = @"E:\exerciseExcelConsole\Data";
-                outPutPath = "json";
-                isAllowBlank = true;
-                needWatch = true;
+                //root = @"E:\exerciseExcelConsole\Data";
+                //outPutPath = "json";
+                //isAllowBlank = true;
+                //needWatch = true;
 
-                if (needWatch)
-                {
-                    Thread thread = new Thread(WatchRootFilesChanged);
-                    //thread.IsBackground = true;
-                    thread.Start();
-                    Console.WriteLine("开始当前目录下文件的改变。");
-                }
-                ParseExcel();
+                //if (needWatch)
+                //{
+                //    Thread thread = new Thread(WatchRootFilesChanged);
+                //    //thread.IsBackground = true;
+                //    thread.Start();
+                //    Console.WriteLine("开始当前目录下文件的改变。");
+                //}
+                //ParseExcel();
 
-                //ShowHelpDoc();
+                ShowHelpDoc();
             }
 
         }
