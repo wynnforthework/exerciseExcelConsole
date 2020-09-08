@@ -76,10 +76,13 @@ namespace FabricioEx
             }
             else
             {
+                //string root = @"E:\exerciseExcelConsole\Data";
+                //string outPutPath = "json";
+                //bool isAllowBlank = false;
+                //ParseExcel(root, outPutPath, isAllowBlank);
+
                 ShowHelpDoc();
             }
-            //root = @"E:\exerciseExcelConsole\Data";
-            //outPutPath = "json";
         }
         static void ShowHelpDoc()
         {
@@ -133,193 +136,203 @@ namespace FabricioEx
             Excel._Worksheet xlWorksheet = sheets[1];
             Excel.Range xlRange = xlWorksheet.UsedRange;
 
-            JArray array = new JArray();
-            int rowCount = xlRange.Rows.Count;
-            int colCount = xlRange.Columns.Count;
+            try 
+            { 
+                JArray array = new JArray();
+                int rowCount = xlRange.Rows.Count;
+                int colCount = xlRange.Columns.Count;
 
-            for (int i = 2; i <= rowCount; i++)
-            {
-                JObject jObject = new JObject();
-                for (int j = 1; j <= colCount; j++)
+                for (int i = 2; i <= rowCount; i++)
                 {
-                    string name = xlRange.Cells[1, j].Value2.ToString();
-                    Excel.Range vCell = xlRange.Cells[i, j];
-                    if (vCell.Value2 == null)
+                    JObject jObject = new JObject();
+                    for (int j = 1; j <= colCount; j++)
                     {
-                        continue;
-                    }
-                    string v = vCell.Value2.ToString();
-                    if (name.StartsWith("!"))
-                    {
-                        continue;
-                    }
-                    else if (name.Contains("#anchor"))
-                    {
-                        Action<JObject, int, string, int> AnchorIterator = null;
-                        AnchorIterator = (jO, anchorIndex, colName, sheetIndex) =>
+                        var ce1 = xlRange.Cells[1, j].Text;
+                        string name = xlRange.Cells[1, j].Value2.ToString();
+                        Excel.Range vCell = xlRange.Cells[i, j];
+                        if (vCell.Value2 == null)
                         {
-                            if (sheetIndex < sheets.Count)
+                            continue;
+                        }
+                        string v = vCell.Value2.ToString();
+                        if (name.StartsWith("!"))
+                        {
+                            continue;
+                        }
+                        else if (name.Contains("#anchor"))
+                        {
+                            Action<JObject, int, string, int> AnchorIterator = null;
+                            AnchorIterator = (jO, anchorIndex, colName, sheetIndex) =>
                             {
-                                Excel._Worksheet xl = sheets[anchorIndex];
-                                bool isAnchorObj = true;
-                                string type = "";
-                                string join = "";
-                                if (name.Contains("@#anchor"))
+                                if (sheetIndex < sheets.Count)
                                 {
-                                    type = "@#anchor";
-                                    isAnchorObj = false;
-                                    join = xl.Name.Replace(".json", "") + "/" + colName.Replace(type, "@#join");
-                                }
-                                else
-                                {
-                                    type = "#anchor";
-                                    isAnchorObj = true;
-                                    join = xl.Name.Replace(".json", "") + "/" + colName.Replace(type, "#join");
-                                }
-                                ++sheetIndex;
-                                int m = sheetIndex;
-
-                                Excel.Range range = sheets[m].UsedRange;
-                                string firstCell = range.Cells[1, 1].Value2.ToString();
-                                if (join.Equals(firstCell))
-                                {
-                                    JArray array1 = new JArray();
-                                    JObject jObject1 = new JObject();
-                                    for (int n = 2; n <= range.Rows.Count; n++)
+                                    Excel._Worksheet xl = sheets[anchorIndex];
+                                    bool isAnchorObj = true;
+                                    string type = "";
+                                    string join = "";
+                                    if (name.Contains("@#anchor"))
                                     {
-                                        if (v.Equals(range.Cells[n, 1].Value2.ToString()))
-                                        {
-                                            JObject jObject2 = new JObject();
-                                            for (int o = 2; o <= range.Columns.Count; o++)
-                                            {
-                                                string colName2 = range.Cells[1, o].Value2.ToString();
-                                                if (colName2.StartsWith("!"))
-                                                {
-                                                    continue;
-                                                }
-                                                else if (colName2.Contains("#anchor"))
-                                                {
+                                        type = "@#anchor";
+                                        isAnchorObj = false;
+                                        join = xl.Name.Replace(".json", "") + "/" + colName.Replace(type, "@#join");
+                                    }
+                                    else
+                                    {
+                                        type = "#anchor";
+                                        isAnchorObj = true;
+                                        join = xl.Name.Replace(".json", "") + "/" + colName.Replace(type, "#join");
+                                    }
+                                    ++sheetIndex;
+                                    int m = sheetIndex;
 
-                                                    JObject jO2 = new JObject();
-                                                    AnchorIterator(jO2, n, colName2, sheetIndex);
-                                                    string colName3 = "";
-                                                    if (name.Contains("@#anchor"))
-                                                    {
-                                                        colName3 = colName2.Replace("@#anchor", "");
-                                                    }
-                                                    else
-                                                    {
-                                                        colName3 = colName2.Replace("#anchor", "");
-                                                    }
-                                                    jO.Add(colName3, jO2[colName3]);
-                                                }
-                                                else if (colName2.Contains("@"))
+                                    Excel.Range range = sheets[m].UsedRange;
+                                    string firstCell = range.Cells[1, 1].Value2.ToString();
+                                    if (join.Equals(firstCell))
+                                    {
+                                        JArray array1 = new JArray();
+                                        JObject jObject1 = new JObject();
+                                        for (int n = 2; n <= range.Rows.Count; n++)
+                                        {
+                                            if (v.Equals(range.Cells[n, 1].Value2.ToString()))
+                                            {
+                                                JObject jObject2 = new JObject();
+                                                for (int o = 2; o <= range.Columns.Count; o++)
                                                 {
-                                                    Excel.Range vCell2 = range.Cells[n, o];
-                                                    if (vCell2.Value2 == null)
+                                                    string colName2 = range.Cells[1, o].Value2.ToString();
+                                                    if (colName2.StartsWith("!"))
                                                     {
                                                         continue;
                                                     }
-                                                    string v2 = vCell2.Value2.ToString();
-                                                    string[] items = v2.Split(new char[] { ',' });
-                                                    JArray array2 = new JArray();
-                                                    for (var k = 0; k < items.Length; k++)
+                                                    else if (colName2.Contains("#anchor"))
                                                     {
-                                                        array2.Add(items[k]);
+
+                                                        JObject jO2 = new JObject();
+                                                        AnchorIterator(jO2, n, colName2, sheetIndex);
+                                                        string colName3 = "";
+                                                        if (name.Contains("@#anchor"))
+                                                        {
+                                                            colName3 = colName2.Replace("@#anchor", "");
+                                                        }
+                                                        else
+                                                        {
+                                                            colName3 = colName2.Replace("#anchor", "");
+                                                        }
+                                                        jO.Add(colName3, jO2[colName3]);
                                                     }
-                                                    jObject2.Add(colName2.Replace("@", ""), array2);
-                                                }
-                                                else
-                                                {
-                                                    if (isAnchorObj)
+                                                    else if (colName2.Contains("@"))
                                                     {
-                                                        jObject1.Add(colName, range.Cells[n, o].Value2.ToString());
-                                                        break;
+                                                        Excel.Range vCell2 = range.Cells[n, o];
+                                                        if (vCell2.Value2 == null)
+                                                        {
+                                                            continue;
+                                                        }
+                                                        string v2 = vCell2.Value2.ToString();
+                                                        string[] items = v2.Split(new char[] { ',' });
+                                                        JArray array2 = new JArray();
+                                                        for (var k = 0; k < items.Length; k++)
+                                                        {
+                                                            array2.Add(items[k]);
+                                                        }
+                                                        jObject2.Add(colName2.Replace("@", ""), array2);
                                                     }
                                                     else
                                                     {
-                                                        jObject2.Add(colName2, range.Cells[n, o].Value2.ToString());
+                                                        if (isAnchorObj)
+                                                        {
+                                                            jObject1.Add(colName, range.Cells[n, o].Value2.ToString());
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            jObject2.Add(colName2, range.Cells[n, o].Value2.ToString());
+                                                        }
                                                     }
                                                 }
+                                                array1.Add(jObject2);
                                             }
-                                            array1.Add(jObject2);
                                         }
-                                    }
-                                    if (isAnchorObj)
-                                    {
-                                        if (jObject1.Count == 0)
+                                        if (isAnchorObj)
                                         {
-                                            jO.Add(colName.Replace(type, ""), jObject1);
+                                            if (jObject1.Count == 0)
+                                            {
+                                                jO.Add(colName.Replace(type, ""), jObject1);
+                                            }
+                                            else
+                                            {
+                                                jO.Add(colName.Replace(type, ""), jObject1[colName]);
+                                            }
                                         }
                                         else
                                         {
-                                            jO.Add(colName.Replace(type, ""), jObject1[colName]);
+                                            jO.Add(colName.Replace(type, ""), array1);
                                         }
                                     }
                                     else
                                     {
-                                        jO.Add(colName.Replace(type, ""), array1);
+                                        AnchorIterator(jO, anchorIndex, colName, sheetIndex);
                                     }
-                                }
-                                else
-                                {
-                                    AnchorIterator(jO, anchorIndex, colName, sheetIndex);
-                                }
 
-                                Marshal.ReleaseComObject(range);
-                                Marshal.ReleaseComObject(xl);
-                            }
-                        };
-                        AnchorIterator(jObject, 1, name, 1);
-                    }
-                    else if (name.Contains("@"))
-                    {
-                        string[] items = v.Split(new char[] { ',' });
-                        JArray array1 = new JArray();
-                        for (var k = 0; k < items.Length; k++)
-                        {
-                            array1.Add(items[k]);
+                                    Marshal.ReleaseComObject(range);
+                                    Marshal.ReleaseComObject(xl);
+                                }
+                            };
+                            AnchorIterator(jObject, 1, name, 1);
                         }
-                        jObject.Add(name.Replace("@", ""), array1);
+                        else if (name.Contains("@"))
+                        {
+                            string[] items = v.Split(new char[] { ',' });
+                            JArray array1 = new JArray();
+                            for (var k = 0; k < items.Length; k++)
+                            {
+                                array1.Add(items[k]);
+                            }
+                            jObject.Add(name.Replace("@", ""), array1);
+                        }
+                        else
+                        {
+                            jObject.Add(name, v);
+                        }
                     }
-                    else
-                    {
-                        jObject.Add(name, v);
-                    }
+                    array.Add(jObject);
                 }
-                array.Add(jObject);
+                string outPutDir;
+                if (Path.IsPathRooted(outPutPath))
+                {
+                    outPutDir = outPutPath;
+                }
+                else
+                {
+                    outPutDir = root + @"\" + outPutPath;
+                }
+                if (!Directory.Exists(outPutDir))
+                {
+                    Directory.CreateDirectory(outPutDir);
+                }
+                File.WriteAllText(outPutDir + @"\" + xlWorksheet.Name, array.ToString());
+                Console.WriteLine(progress + filePath);
             }
-            string outPutDir;
-            if (Path.IsPathRooted(outPutPath))
+            catch (Exception e) 
             {
-                outPutDir = outPutPath;
+                Console.WriteLine(e.ToString());
             }
-            else
-            {
-                outPutDir = root + @"\" + outPutPath;
-            }
-            if (!Directory.Exists(outPutDir))
-            {
-                Directory.CreateDirectory(outPutDir);
-            }
-            File.WriteAllText(outPutDir + @"\" + xlWorksheet.Name, array.ToString());
-            Console.WriteLine(progress + filePath);
+            finally 
+            { 
+                //cleanup
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
 
-            //cleanup
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+                //rule of thumb for releasing com objects:
+                //  never use two dots, all COM objects must be referenced and released individually
+                //  ex: [somthing].[something].[something] is bad
 
-            //rule of thumb for releasing com objects:
-            //  never use two dots, all COM objects must be referenced and released individually
-            //  ex: [somthing].[something].[something] is bad
+                //release com objects to fully kill excel process from running in the background
+                Marshal.ReleaseComObject(xlRange);
+                Marshal.ReleaseComObject(xlWorksheet);
 
-            //release com objects to fully kill excel process from running in the background
-            Marshal.ReleaseComObject(xlRange);
-            Marshal.ReleaseComObject(xlWorksheet);
-
-            //close and release
-            xlWorkbook.Close();
-            Marshal.ReleaseComObject(xlWorkbook);
+                //close and release
+                xlWorkbook.Close();
+                Marshal.ReleaseComObject(xlWorkbook);
+            };
         }
     }
 }
