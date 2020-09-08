@@ -5,15 +5,24 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace FabricioEx
 {
     class Program
     {
+        static string root = Environment.CurrentDirectory;
+        static string outPutPath = "";
+        static bool isAllowBlank = false;
+        static bool needArg = false;
+        static bool needWatch = false;
+        static FileSystemWatcher Watch;
+
         static void Main(string[] args)
         {
             ParseArgs(args);
         }
+
         static void ParseArgs(string[] args)
         {
             if (args.Length > 0)
@@ -22,10 +31,6 @@ namespace FabricioEx
                 {
                     return;
                 }
-                string root = Environment.CurrentDirectory;
-                string outPutPath = "";
-                bool isAllowBlank = false;
-                bool needArg = false;
                 for (int i = 0; i < args.Length; i++)
                 {
                     if (needArg)
@@ -48,9 +53,17 @@ namespace FabricioEx
                             // 允许空白
                             if (args[i + 1].ToLower() == "y")
                             {
-                                needArg = true;
                                 isAllowBlank = true;
                             }
+                            needArg = true;
+                            break;
+                        case "-w":
+                            // 监听当前目录是否有文件被修改、新增、删除等
+                            if (args[i + 1].ToLower() == "y")
+                            {
+                                needWatch = true;
+                            }
+                            needArg = true;
                             break;
                         default:
                             if (args[i].StartsWith("-"))
@@ -65,7 +78,14 @@ namespace FabricioEx
                             break;
                     }
                 }
-                ParseExcel(root, outPutPath, isAllowBlank);
+                if (needWatch)
+                {
+
+                    Thread thread = new Thread(WatchRootFilesChanged);
+                    //thread.IsBackground = true;
+                    thread.Start();
+                }
+                ParseExcel();
             }
             else if (args.Length > 0)
             {
@@ -76,13 +96,23 @@ namespace FabricioEx
             }
             else
             {
-                string root = @"E:\exerciseExcelConsole\Data";
-                string outPutPath = "json";
-                bool isAllowBlank = false;
-                ParseExcel(root, outPutPath, isAllowBlank);
+                root = @"E:\exerciseExcelConsole\Data";
+                outPutPath = "json";
+                isAllowBlank = true;
+                needWatch = true;
+
+                if (needWatch)
+                {
+                    Thread thread = new Thread(WatchRootFilesChanged);
+                    //thread.IsBackground = true;
+                    thread.Start();
+                    Console.WriteLine("开始当前目录下文件的改变。");
+                }
+                ParseExcel();
 
                 //ShowHelpDoc();
             }
+
         }
         static void ShowHelpDoc()
         {
@@ -94,7 +124,7 @@ namespace FabricioEx
             string str = Console.ReadLine();
             ParseArgs(str.Split(' '));
         }
-        static void ParseExcel(string root,string outPutPath,bool isAllowBlank)
+        static void ParseExcel()
         {
             IEnumerable<string> allFiles = Directory.GetFiles(root + @"\", "*.xls*").Where(s => s.EndsWith("xlsx") || s.EndsWith("xls"));
             List<string> files = new List<string>();
@@ -408,6 +438,40 @@ namespace FabricioEx
                 xlWorkbook.Close();
                 Marshal.ReleaseComObject(xlWorkbook);
             };
+        }
+
+        static void WatchRootFilesChanged()
+        {
+            Watch = new FileSystemWatcher(root);
+            Watch.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
+            Watch.IncludeSubdirectories = false;
+            Watch.Changed += new FileSystemEventHandler(watch_changed);
+            Watch.IncludeSubdirectories = false;
+            Watch.EnableRaisingEvents = true;
+
+            while (true)
+            {
+                Thread.Sleep(1000);
+            }
+        }
+        static void watch_changed(object source, FileSystemEventArgs e)
+        {
+            if (Watch != null)
+            {
+                try
+                {
+                    if (!e.Name.StartsWith("~$"))
+                    {
+                        Console.WriteLine("有文件改动");
+                        ParseExcel();
+                    }
+                    Watch.EnableRaisingEvents = false;
+                }
+                finally
+                {
+                    Watch.EnableRaisingEvents = true;
+                }
+            }
         }
     }
 }
