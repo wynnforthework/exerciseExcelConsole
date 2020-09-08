@@ -446,6 +446,8 @@ namespace FabricioEx
             Watch.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
             Watch.IncludeSubdirectories = false;
             Watch.Changed += new FileSystemEventHandler(watch_changed);
+            Watch.Created += new FileSystemEventHandler(watch_created);
+            Watch.Deleted += new FileSystemEventHandler(watch_deleted);
             Watch.IncludeSubdirectories = false;
             Watch.EnableRaisingEvents = true;
 
@@ -463,6 +465,43 @@ namespace FabricioEx
                     if (!e.Name.StartsWith("~$"))
                     {
                         Console.WriteLine("有文件改动");
+                        ParseExcel();
+                    }
+                    Watch.EnableRaisingEvents = false;
+                }
+                finally
+                {
+                    Watch.EnableRaisingEvents = true;
+                }
+            }
+        }
+        static void watch_created(object source, FileSystemEventArgs e)
+        {
+            if (Watch != null)
+            {
+                try
+                {
+                    if (!e.Name.StartsWith("~$"))
+                    {
+                        Console.WriteLine("有文件被创建");
+                    }
+                    Watch.EnableRaisingEvents = false;
+                }
+                finally
+                {
+                    Watch.EnableRaisingEvents = true;
+                }
+            }
+        }
+        static void watch_deleted(object source, FileSystemEventArgs e)
+        {
+            if (Watch != null)
+            {
+                try
+                {
+                    if (!e.Name.StartsWith("~$"))
+                    {
+                        Console.WriteLine("有文件删除");
                         ParseExcel();
                     }
                     Watch.EnableRaisingEvents = false;
