@@ -76,12 +76,12 @@ namespace FabricioEx
             }
             else
             {
-                //string root = @"E:\exerciseExcelConsole\Data";
-                //string outPutPath = "json";
-                //bool isAllowBlank = false;
-                //ParseExcel(root, outPutPath, isAllowBlank);
+                string root = @"E:\exerciseExcelConsole\Data";
+                string outPutPath = "json";
+                bool isAllowBlank = false;
+                ParseExcel(root, outPutPath, isAllowBlank);
 
-                ShowHelpDoc();
+                //ShowHelpDoc();
             }
         }
         static void ShowHelpDoc()
@@ -147,15 +147,35 @@ namespace FabricioEx
                     JObject jObject = new JObject();
                     for (int j = 1; j <= colCount; j++)
                     {
-                        var ce1 = xlRange.Cells[1, j].Text;
-                        string name = xlRange.Cells[1, j].Value2.ToString();
-                        Excel.Range vCell = xlRange.Cells[i, j];
-                        if (vCell.Value2 == null)
+                        var ce1 = xlRange.Cells[1, j];
+                        if ((string)ce1.Text == "")
                         {
-                            continue;
+                            throw new Exception("第一行第一列不允许为空");
                         }
-                        string v = vCell.Value2.ToString();
-                        if (name.StartsWith("!"))
+                        string name = ce1.Value2.ToString();
+                        Excel.Range vCell = xlRange.Cells[i, j];
+
+                        string v;
+                        if (vCell.Text=="")
+                        {
+                            if (isAllowBlank)
+                            {
+                                v = "";
+                            }
+                            else
+                            {
+                                throw new Exception("当前设置不允许单元格为空");
+                            }
+                        }
+                        else
+                        {
+                            v = vCell.Value2.ToString();
+                        }
+                        if (v.Equals("")) 
+                        { 
+                            jObject.Add(name, v);
+                        } 
+                        else if (name.StartsWith("!"))
                         {
                             continue;
                         }
@@ -167,9 +187,9 @@ namespace FabricioEx
                                 if (sheetIndex < sheets.Count)
                                 {
                                     Excel._Worksheet xl = sheets[anchorIndex];
-                                    bool isAnchorObj = true;
-                                    string type = "";
-                                    string join = "";
+                                    bool isAnchorObj;
+                                    string type;
+                                    string join;
                                     if (name.Contains("@#anchor"))
                                     {
                                         type = "@#anchor";
@@ -186,19 +206,34 @@ namespace FabricioEx
                                     int m = sheetIndex;
 
                                     Excel.Range range = sheets[m].UsedRange;
-                                    string firstCell = range.Cells[1, 1].Value2.ToString();
+                                    ce1 = range.Cells[1, 1];
+                                    if ((string)ce1.Text == "")
+                                    {
+                                        throw new Exception("第一行第一列不允许为空");
+                                    }
+                                    string firstCell = ce1.Value2.ToString();
                                     if (join.Equals(firstCell))
                                     {
                                         JArray array1 = new JArray();
                                         JObject jObject1 = new JObject();
                                         for (int n = 2; n <= range.Rows.Count; n++)
                                         {
-                                            if (v.Equals(range.Cells[n, 1].Value2.ToString()))
+                                            ce1 = range.Cells[n, 1];
+                                            if ((string)ce1.Text == "")
+                                            {
+                                                throw new Exception("第一行第一列不允许为空");
+                                            }
+                                            if (v.Equals(ce1.Value2.ToString()))
                                             {
                                                 JObject jObject2 = new JObject();
                                                 for (int o = 2; o <= range.Columns.Count; o++)
                                                 {
-                                                    string colName2 = range.Cells[1, o].Value2.ToString();
+                                                    ce1 = range.Cells[1, o];
+                                                    if ((string)ce1.Text == "")
+                                                    {
+                                                        throw new Exception("第一行第一列不允许为空");
+                                                    }
+                                                    string colName2 = ce1.Value2.ToString();
                                                     if (colName2.StartsWith("!"))
                                                     {
                                                         continue;
@@ -208,7 +243,7 @@ namespace FabricioEx
 
                                                         JObject jO2 = new JObject();
                                                         AnchorIterator(jO2, n, colName2, sheetIndex);
-                                                        string colName3 = "";
+                                                        string colName3;
                                                         if (name.Contains("@#anchor"))
                                                         {
                                                             colName3 = colName2.Replace("@#anchor", "");
@@ -222,29 +257,69 @@ namespace FabricioEx
                                                     else if (colName2.Contains("@"))
                                                     {
                                                         Excel.Range vCell2 = range.Cells[n, o];
-                                                        if (vCell2.Value2 == null)
-                                                        {
-                                                            continue;
-                                                        }
-                                                        string v2 = vCell2.Value2.ToString();
-                                                        string[] items = v2.Split(new char[] { ',' });
                                                         JArray array2 = new JArray();
-                                                        for (var k = 0; k < items.Length; k++)
+                                                        if (vCell2.Text == "")
                                                         {
-                                                            array2.Add(items[k]);
+                                                            if (isAllowBlank)
+                                                            {
+                                                                jObject2.Add(colName2.Replace("@", ""), array2);
+                                                            }
+                                                            else
+                                                            {
+                                                                throw new Exception("当前设置不允许单元格为空");
+                                                            }
                                                         }
-                                                        jObject2.Add(colName2.Replace("@", ""), array2);
+                                                        else
+                                                        {
+                                                            string v2 = vCell2.Value2.ToString();
+                                                            string[] items = v2.Split(new char[] { ',' });
+                                                            for (var k = 0; k < items.Length; k++)
+                                                            {
+                                                                array2.Add(items[k]);
+                                                            }
+                                                            jObject2.Add(colName2.Replace("@", ""), array2);
+                                                        }
                                                     }
                                                     else
                                                     {
                                                         if (isAnchorObj)
                                                         {
-                                                            jObject1.Add(colName, range.Cells[n, o].Value2.ToString());
+                                                            Excel.Range vCell2 = range.Cells[n, o];
+                                                            if (vCell2.Text == "")
+                                                            {
+                                                                if (isAllowBlank)
+                                                                {
+                                                                    jObject1.Add(colName, "");
+                                                                }
+                                                                else
+                                                                {
+                                                                    throw new Exception("当前设置不允许单元格为空");
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                jObject1.Add(colName, vCell2.Value2.ToString());
+                                                            }
                                                             break;
                                                         }
                                                         else
                                                         {
-                                                            jObject2.Add(colName2, range.Cells[n, o].Value2.ToString());
+                                                            Excel.Range vCell2 = range.Cells[n, o];
+                                                            if (vCell2.Text == "")
+                                                            {
+                                                                if (isAllowBlank)
+                                                                {
+                                                                    jObject2.Add(colName, "");
+                                                                }
+                                                                else
+                                                                {
+                                                                    throw new Exception("当前设置不允许单元格为空");
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                jObject2.Add(colName2, vCell2.Value2.ToString());
+                                                            }
                                                         }
                                                     }
                                                 }
