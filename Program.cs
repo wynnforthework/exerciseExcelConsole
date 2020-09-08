@@ -12,19 +12,87 @@ namespace FabricioEx
     {
         static void Main(string[] args)
         {
-
-
-            string root = Environment.CurrentDirectory;
-            string outPutPath = root;
-            if (args.Length == 2)
+            ParseArgs(args);
+        }
+        static void ParseArgs(string[] args)
+        {
+            if (args.Length > 0)
             {
-                if (args[0] == "-o")
+                if (args[0].Equals("d"))
                 {
-                    outPutPath = args[1];
+                    return;
                 }
+                string root = Environment.CurrentDirectory;
+                string outPutPath = "";
+                bool isAllowBlank = false;
+                bool needArg = false;
+                for (int i = 0; i < args.Length; i++)
+                {
+                    if (needArg)
+                    {
+                        needArg = false;
+                        continue;
+                    }
+                    switch (args[i])
+                    {
+                        case "-o":
+                            // 输出目录
+                            outPutPath = args[i + 1];
+                            needArg = true;
+                            break;
+                        case "-h":
+                            // 帮助
+                            ShowHelpDoc();
+                            break;
+                        case "-b":
+                            // 允许空白
+                            if (args[i + 1].ToLower() == "y")
+                            {
+                                needArg = true;
+                                isAllowBlank = true;
+                            }
+                            break;
+                        default:
+                            if (args[i].StartsWith("-"))
+                            {
+                                Console.WriteLine("unknown option: "+args[i]);
+                                Console.WriteLine("usage: [-h] [-o] [-b]");
+                            }
+                            else
+                            {
+                                Console.WriteLine(args[i] + " is not a git command. See 'git -h'.");
+                            }
+                            break;
+                    }
+                }
+                ParseExcel(root, outPutPath, isAllowBlank);
+            }
+            else if (args.Length > 0)
+            {
+                Console.WriteLine("Wrong number of parameters, please enter - h to view the help document.");
+                Console.WriteLine("Please enter this option or d quit.");
+                string str = Console.ReadLine();
+                ParseArgs(str.Split(' '));
+            }
+            else
+            {
+                ShowHelpDoc();
             }
             //root = @"E:\exerciseExcelConsole\Data";
             //outPutPath = "json";
+        }
+        static void ShowHelpDoc()
+        {
+            Console.WriteLine("Welcome to the excel to json tools");
+            Console.WriteLine("-h View help documentation.");
+            Console.WriteLine("-o Set the output directory, if not set, the default is the current folder.");
+            Console.WriteLine("-b Whether cells are allowed to be empty (non first column and first row),The parameter is Y or N.");
+            Console.WriteLine("Please enter this option or d quit.");
+            string str = Console.ReadLine();
+            ParseArgs(str.Split(' '));
+        }
+        static void ParseExcel(string root,string outPutPath,bool isAllowBlank)
+        {
             IEnumerable<string> allFiles = Directory.GetFiles(root + @"\", "*.xls*").Where(s => s.EndsWith("xlsx") || s.EndsWith("xls"));
             List<string> files = new List<string>();
             if (allFiles.Count<string>() > 0)
@@ -40,9 +108,9 @@ namespace FabricioEx
                 Console.WriteLine("Found " + files.Count + " xlsx or xls files.");
                 Console.WriteLine("convert succeed:");
                 int progress = 1;
-                foreach(string file in files)
+                foreach (string file in files)
                 {
-                    Excel2json(file, xlApp, outPutPath, root, progress + @"/" + files.Count+"\t");
+                    Excel2json(file, xlApp, outPutPath, root, progress + @"/" + files.Count + "\t", isAllowBlank);
                     progress++;
                 }
                 Console.WriteLine("All the files have been converted.");
@@ -50,11 +118,15 @@ namespace FabricioEx
                 xlApp.Quit();
                 Marshal.ReleaseComObject(xlApp);
             }
+            else
+            {
+                Console.WriteLine("There are no Excel files in this directory.");
+            }
         }
 
-        static void Excel2json(string filePath, Excel.Application xlApp,string outPutPath,string root,string progress)
+        static void Excel2json(string filePath, Excel.Application xlApp, string outPutPath, string root, string progress, bool isAllowBlank)
         {
-            
+
             Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(filePath);
 
             Excel.Sheets sheets = xlWorkbook.Sheets;
@@ -217,12 +289,20 @@ namespace FabricioEx
                 }
                 array.Add(jObject);
             }
-            string outputDir = root + @"\" + outPutPath;
-            if (!Directory.Exists(outputDir))
+            string outPutDir;
+            if (Path.IsPathRooted(outPutPath))
             {
-                Directory.CreateDirectory(outputDir);
+                outPutDir = outPutPath;
             }
-            File.WriteAllText(outputDir + @"\" + xlWorksheet.Name, array.ToString());
+            else
+            {
+                outPutDir = root + @"\" + outPutPath;
+            }
+            if (!Directory.Exists(outPutDir))
+            {
+                Directory.CreateDirectory(outPutDir);
+            }
+            File.WriteAllText(outPutDir + @"\" + xlWorksheet.Name, array.ToString());
             Console.WriteLine(progress + filePath);
 
             //cleanup
@@ -240,7 +320,6 @@ namespace FabricioEx
             //close and release
             xlWorkbook.Close();
             Marshal.ReleaseComObject(xlWorkbook);
-
         }
     }
 }
