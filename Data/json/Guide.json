@@ -2,88 +2,463 @@
   {
     "ID": "1",
     "TriggerScene": "SelectHeroNewScene",
-    "TriggerDelay": "100",
-    "TriggerType": "None",
-    "TriggerButton": [],
+    "Subtitles": [
+      {
+        "Subtitle": "主公，在战斗开始前，请先选取您的出战武将，武将技能将帮您获得厉害的军令！"
+      },
+      {
+        "Subtitle": "请选择夏侯惇出战！"
+      }
+    ],
     "Options": [
       {
-        "Type": "Equal",
-        "Params": [
-          "this.hero_id==10008"
-        ]
-      }
-    ],
-    "Subs": [
+        "Type": "ShowGuideScene",
+        "Params": [],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
       {
-        "Subtitle": "这是第二段，这个游戏超乎想象，划时代画面，次世代场景。"
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.not_click.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_sub.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlaySubtitle_SceneName_Duration_Index",
+        "Params": [
+          "GuideScene",
+          "playMsg",
+          "100",
+          "0"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_3.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlayAnim_SceneName_AnimName",
+        "Params": [
+          "GuideScene",
+          "anim_left_move"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlaySubtitle_SceneName_Duration_Index",
+        "Params": [
+          "GuideScene",
+          "playMsg",
+          "100",
+          "1"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_3.visible=false"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.not_click.visible=false"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "1000"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_sub.visible=false"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "Override_SceneName_FunctionName_Judge",
+        "Params": [
+          "SelectHeroNewScene",
+          "onHeroAtCenter",
+          "this.hero_id==30014"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_3.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlayAnim_SceneName_AnimName",
+        "Params": [
+          "GuideScene",
+          "anim_down_move"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "HideScene_SceneName",
+        "Params": [
+          "GuideScene"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowMask_UIs",
+        "Params": [
+          "play",
+          "btn_right",
+          "btn_left"
+        ],
+        "EndAction": "None",
+        "Delay": "0"
       }
-    ],
-    "Test": [
-      "1",
-      "2",
-      "3"
-    ],
-    "Labels": {}
+    ]
   },
   {
     "ID": "2",
     "TriggerScene": "LoginScene",
-    "TriggerDelay": "100",
-    "TriggerType": "Scene",
-    "TriggerButton": [],
-    "Options": [],
-    "Subs": [
-      {
-        "Subtitle": "这是全新制作的卡牌，融合了竞技，策略，rpg，养成，收集，战斗为一体。"
-      }
-    ],
-    "Test": [
-      "a",
-      "b"
-    ],
-    "Labels": "势如破竹"
+    "Subtitles": [],
+    "Options": []
   },
   {
     "ID": "3",
     "TriggerScene": "HomeScene",
-    "TriggerDelay": "100",
-    "TriggerType": "Mask",
-    "Notes": [
+    "Subtitles": [
       {
-        "Note": "标准房"
+        "Subtitle": "《智计无双》是一款结合了策划、战争、兵法、竞技的全新卡牌游戏，接下来，由我带您进入新手引导，完成新手引导有丰厚的奖励哦！"
       },
       {
-        "Note": "高级房"
+        "Subtitle": "《智计无双》的核心玩法，就是将玩家手中的2个军令和5个公共军令组合，组合出的军令计越强，战胜对手的机会越大。"
       }
     ],
-    "TriggerButton": [
+    "Options": [
       {
-        "btn": "normalGame_btn"
+        "Type": "ShowGuideScene",
+        "Params": [],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.not_click.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_sub.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlaySubtitle_SceneName_Duration_Index",
+        "Params": [
+          "GuideScene",
+          "playMsg",
+          "100",
+          "0"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.not_click.visible=false"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_sub.visible=false"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_0.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlayAnim_SceneName_AnimName",
+        "Params": [
+          "GuideScene",
+          "anim_show"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.next_step.visible=true"
+        ],
+        "EndAction": "None",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_0.visible=false"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.not_click.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_sub.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlaySubtitle_SceneName_Duration_Index",
+        "Params": [
+          "GuideScene",
+          "playMsg",
+          "100",
+          "1"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.not_click.visible=false"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_sub.visible=false"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_1.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlayAnim_SceneName_AnimName",
+        "Params": [
+          "GuideScene",
+          "anim_drop"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlayAnim_SceneName_AnimName",
+        "Params": [
+          "GuideScene",
+          "anim_center"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.next_step.visible=true"
+        ],
+        "EndAction": "None",
+        "Delay": "0"
+      },
+      {
+        "Type": "HideScene_SceneName",
+        "Params": [
+          "GuideScene"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowMask_UIs",
+        "Params": [
+          "normalGame_btn"
+        ],
+        "EndAction": "None",
+        "Delay": "0"
+      },
+      {
+        "Type": "SocketSend_Path",
+        "Params": [
+          "53"
+        ],
+        "EndAction": "",
+        "Delay": ""
       }
-    ],
-    "Options": [],
-    "Subs": [],
-    "Test@": "",
-    "Labels": {}
+    ]
   },
   {
     "ID": "4",
     "TriggerScene": "SelectRoomScene",
-    "TriggerDelay": "100",
-    "TriggerType": "None",
-    "TriggerButton": [],
+    "Subtitles": [
+      {
+        "Subtitle": "主公，在战斗开始前，请先选取您的战场级别，武将技能将帮您获得厉害的军令！"
+      },
+      {
+        "Subtitle": "请选择“势如破竹”"
+      }
+    ],
     "Options": [
+      {
+        "Type": "HideScene_SceneName",
+        "Params": [
+          "DrawGuideUtilView"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowGuideScene",
+        "Params": [],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.not_click.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.show_sub.visible=true"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlaySubtitle_SceneName_Duration_Index",
+        "Params": [
+          "GuideScene",
+          "playMsg",
+          "100",
+          "0"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "PlaySubtitle_SceneName_Duration_Index",
+        "Params": [
+          "GuideScene",
+          "playMsg",
+          "100",
+          "1"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
+      {
+        "Type": "ShowUI_SceneName_UI",
+        "Params": [
+          "GuideScene",
+          "this.next_step.visible=true"
+        ],
+        "EndAction": "None",
+        "Delay": "0"
+      },
+      {
+        "Type": "HideScene_SceneName",
+        "Params": [
+          "GuideScene"
+        ],
+        "EndAction": "NextStep",
+        "Delay": "0"
+      },
       {
         "Type": "Override_SceneName_FunctionName_Judge",
         "Params": [
           "SelectRoomScene",
           "onRoomSelected",
-          "evt.room==10"
-        ]
+          "evt.room==3"
+        ],
+        "EndAction": "None",
+        "Delay": "0"
       }
-    ],
-    "Subs": [],
-    "Test@": "",
-    "Labels": {}
+    ]
   }
 ]

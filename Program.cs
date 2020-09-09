@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using System.Diagnostics;
 
 namespace FabricioEx
 {
@@ -17,7 +18,7 @@ namespace FabricioEx
         static bool needArg = false;
         static bool needWatch = false;
         static FileSystemWatcher Watch;
-
+        static bool isDebug = false;
         static void Main(string[] args)
         {
             ParseArgs(args);
@@ -96,21 +97,27 @@ namespace FabricioEx
             }
             else
             {
-                //root = @"E:\exerciseExcelConsole\Data";
-                //outPutPath = "json";
-                //isAllowBlank = true;
-                //needWatch = true;
+                if (isDebug)
+                {
+                    root = @"E:\exerciseExcelConsole\Data";
+                    outPutPath = "json";
+                    isAllowBlank = true;
+                    needWatch = false;
 
-                //if (needWatch)
-                //{
-                //    Thread thread = new Thread(WatchRootFilesChanged);
-                //    //thread.IsBackground = true;
-                //    thread.Start();
-                //    Console.WriteLine("开始当前目录下文件的改变。");
-                //}
-                //ParseExcel();
+                    if (needWatch)
+                    {
+                        Thread thread = new Thread(WatchRootFilesChanged);
+                        //thread.IsBackground = true;
+                        thread.Start();
+                        Console.WriteLine("开始当前目录下文件的改变。");
+                    }
+                    ParseExcel();
+                }
+                else
+                {
+                    ShowHelpDoc();
+                }
 
-                ShowHelpDoc();
             }
 
         }
@@ -339,7 +346,7 @@ namespace FabricioEx
                                                             {
                                                                 if (isAllowBlank)
                                                                 {
-                                                                    jObject2.Add(colName, "");
+                                                                    jObject2.Add(colName2, "");
                                                                 }
                                                                 else
                                                                 {
@@ -419,6 +426,7 @@ namespace FabricioEx
             catch (Exception e) 
             {
                 Console.WriteLine(e.ToString());
+                Debug.Write(e.ToString());
             }
             finally 
             { 
@@ -445,9 +453,9 @@ namespace FabricioEx
             Watch = new FileSystemWatcher(root);
             Watch.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
             Watch.IncludeSubdirectories = false;
-            Watch.Changed += new FileSystemEventHandler(watch_changed);
-            Watch.Created += new FileSystemEventHandler(watch_created);
-            Watch.Deleted += new FileSystemEventHandler(watch_deleted);
+            Watch.Changed += new FileSystemEventHandler(Watch_changed);
+            Watch.Created += new FileSystemEventHandler(Watch_created);
+            Watch.Deleted += new FileSystemEventHandler(Watch_deleted);
             Watch.IncludeSubdirectories = false;
             Watch.EnableRaisingEvents = true;
 
@@ -456,7 +464,7 @@ namespace FabricioEx
                 Thread.Sleep(1000);
             }
         }
-        static void watch_changed(object source, FileSystemEventArgs e)
+        static void Watch_changed(object source, FileSystemEventArgs e)
         {
             if (Watch != null)
             {
@@ -475,7 +483,7 @@ namespace FabricioEx
                 }
             }
         }
-        static void watch_created(object source, FileSystemEventArgs e)
+        static void Watch_created(object source, FileSystemEventArgs e)
         {
             if (Watch != null)
             {
@@ -493,7 +501,7 @@ namespace FabricioEx
                 }
             }
         }
-        static void watch_deleted(object source, FileSystemEventArgs e)
+        static void Watch_deleted(object source, FileSystemEventArgs e)
         {
             if (Watch != null)
             {
