@@ -148,15 +148,32 @@ namespace FabricioEx
                 Console.WriteLine("Found " + files.Count + " xlsx or xls files.");
                 Console.WriteLine("convert succeed:");
                 int progress = 1;
+                bool right = true;
                 foreach (string file in files)
                 {
-                    Excel2json(file, xlApp, outPutPath, root, progress + @"/" + files.Count + "\t", isAllowBlank);
-                    progress++;
+                    right = Excel2json(file, xlApp, outPutPath, root, progress + @"/" + files.Count + "\t", isAllowBlank);
+                    if (right)
+                    {
+                        progress++;
+                    } 
+                    else
+                    {
+                        break;
+                    }
                 }
-                Console.WriteLine("All the files have been converted.");
                 //quit and release
                 xlApp.Quit();
                 Marshal.ReleaseComObject(xlApp);
+                if (right)
+                {
+                    Console.WriteLine("All the files have been converted.");
+                }
+                else
+                {
+                    Console.WriteLine("Something went wrong.");
+                    Console.Write("按任意键退出...");
+                    Console.ReadKey(true);
+                }
             }
             else
             {
@@ -164,7 +181,7 @@ namespace FabricioEx
             }
         }
 
-        static void Excel2json(string filePath, Excel.Application xlApp, string outPutPath, string root, string progress, bool isAllowBlank)
+        static bool Excel2json(string filePath, Excel.Application xlApp, string outPutPath, string root, string progress, bool isAllowBlank)
         {
 
             Excel.Workbook xlWorkbook = xlApp.Workbooks.Open(filePath);
@@ -173,6 +190,7 @@ namespace FabricioEx
             Excel._Worksheet xlWorksheet = sheets[1];
             Excel.Range xlRange = xlWorksheet.UsedRange;
 
+            bool isRight = true;
             try 
             { 
                 JArray array = new JArray();
@@ -425,6 +443,7 @@ namespace FabricioEx
             }
             catch (Exception e) 
             {
+                isRight = false;
                 Console.WriteLine(e.ToString());
                 Debug.Write(e.ToString());
             }
@@ -446,6 +465,7 @@ namespace FabricioEx
                 xlWorkbook.Close();
                 Marshal.ReleaseComObject(xlWorkbook);
             };
+            return isRight;
         }
 
         static void WatchRootFilesChanged()
