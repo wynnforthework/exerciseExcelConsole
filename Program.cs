@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Diagnostics;
+using CU;
 
 namespace FabricioEx
 {
@@ -18,6 +19,7 @@ namespace FabricioEx
         static bool needArg = false;
         static bool needWatch = false;
         static FileSystemWatcher Watch;
+        static int maxFileNameLenght = 0;
         static bool isDebug = false;
         static void Main(string[] args)
         {
@@ -142,6 +144,11 @@ namespace FabricioEx
                 {
                     if ((new FileInfo(file).Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
                     {
+                        var fileName = Path.GetFileName(file);
+                        if (fileName.Length > maxFileNameLenght)
+                        {
+                            maxFileNameLenght = fileName.Length;
+                        }
                         files.Add(file);
                     }
                 }
@@ -192,16 +199,27 @@ namespace FabricioEx
 
             bool isRight = true;
             try 
-            { 
+            {
+                var fileName = Path.GetFileName(filePath);
+                var tCount = Math.Ceiling((double)maxFileNameLenght / 8);
+                Console.Write(progress + Path.GetFileName(filePath));
+                for (int i = 1; i <= (tCount + 1- Math.Ceiling((double)fileName.Length / 8)); i++)
+                {
+                    Console.Write("\t");
+                }
+                
                 JArray array = new JArray();
                 int rowCount = xlRange.Rows.Count;
                 int colCount = xlRange.Columns.Count;
+                int totalCount = rowCount * colCount;
 
+                ConsoleUtility.WriteProgressBar(0);
                 for (int i = 2; i <= rowCount; i++)
                 {
                     JObject jObject = new JObject();
                     for (int j = 1; j <= colCount; j++)
                     {
+                        ConsoleUtility.WriteProgressBar((int)(((i - 1) * colCount + j)*100) / totalCount,true);
                         var ce1 = xlRange.Cells[1, j];
                         if ((string)ce1.Text == "")
                         {
@@ -439,7 +457,6 @@ namespace FabricioEx
                     Directory.CreateDirectory(outPutDir);
                 }
                 File.WriteAllText(outPutDir + @"\" + xlWorksheet.Name, array.ToString());
-                Console.WriteLine(progress + filePath);
             }
             catch (Exception e) 
             {
